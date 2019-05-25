@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:web_audio';
+import 'dart:html' as html;
 
 import 'package:flutter_web/material.dart';
 
@@ -26,10 +28,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static final Duration _tick = Duration(milliseconds: 10);
+  static final TextStyle _timeTextStyle =
+      TextStyle(color: Colors.white, fontSize: 30);
   Timer _timer;
   Duration _defaultTime = Duration(minutes: 25);
   Duration _countdown = Duration(minutes: 25);
   String _buttonText = 'Start';
+
+  void alarmRing() {
+    AudioContext audioContext = new AudioContext();
+    html.HttpRequest.request('./assets/ring.ogg', responseType: 'arraybuffer')
+        .then((html.HttpRequest request) => audioContext
+                .decodeAudioData(request.response)
+                .then((AudioBuffer buffer) {
+              AudioBufferSourceNode source = audioContext.createBufferSource();
+              source.buffer = buffer;
+              source.connectNode(audioContext.destination);
+              source.start(audioContext.currentTime);
+            }));
+  }
 
   void startTimer() {
     _timer = Timer.periodic(
@@ -37,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         (Timer timer) => setState(() {
               if (_countdown <= Duration.zero) {
                 stopTimer();
+                alarmRing();
               } else {
                 _countdown -= _tick;
               }
@@ -91,16 +109,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        '${_countdown.inMinutes}:${(_countdown.inSeconds - (_countdown.inMinutes * 60)).toString().padLeft(2, '0')}',
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            '${_countdown.inMinutes}',
+                            style: _timeTextStyle,
+                          ),
+                          Text(
+                            ':',
+                            style: _timeTextStyle,
+                          ),
+                          Text(
+                            (_countdown.inSeconds - (_countdown.inMinutes * 60))
+                                .toString()
+                                .padLeft(2, '0'),
+                            style: _timeTextStyle,
+                          )
+                        ],
                       ),
                       FlatButton(
                         color: Colors.green,
                         textColor: Colors.white,
                         child: Text(_buttonText),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                        shape: StadiumBorder(),
                         onPressed: () => buttonPress(),
                       ),
                     ],
