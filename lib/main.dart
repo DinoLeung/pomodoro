@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Pomodoro Timer',
       theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'IBM Plex Sans'),
       home: MyHomePage(title: 'Tomato'),
     );
@@ -25,18 +25,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Timer _timer = Timer(Duration(milliseconds: 10), () {});
-  double _time = 10.0;
+  static final Duration _tick = Duration(milliseconds: 10);
+  Timer _timer;
+  Duration _defaultTime = Duration(minutes: 25);
+  Duration _countdown = Duration(minutes: 25);
   String _buttonText = 'Start';
 
   void startTimer() {
     _timer = Timer.periodic(
-        Duration(milliseconds: 10),
+        _tick,
         (Timer timer) => setState(() {
-              if (_time < 0.01) {
+              if (_countdown <= Duration.zero) {
                 stopTimer();
               } else {
-                _time -= 0.01;
+                _countdown -= _tick;
               }
             }));
     _buttonText = 'Stop';
@@ -48,15 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
   void resetTimer() => setState(() {
-        _time = 10.0;
+        _countdown = _defaultTime;
         _buttonText = 'Start';
       });
 
   void buttonPress() {
-    if (_timer.isActive) {
+    if (_timer?.isActive ?? false) {
       stopTimer();
     } else {
-      if (_time == 10.0) {
+      if (_countdown == _defaultTime) {
         startTimer();
       } else {
         resetTimer();
@@ -80,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 300,
                     width: 300,
                     child: CircularProgressIndicator(
-                      value: _time / 10,
+                      value: _countdown.inMilliseconds /
+                          _defaultTime.inMilliseconds,
                       backgroundColor: Colors.white,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.lime),
                     ),
@@ -89,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '${_time.toStringAsFixed(2)}',
+                        '${_countdown.inMinutes}:${(_countdown.inSeconds - (_countdown.inMinutes * 60)).toString().padLeft(2, '0')}',
                         style: TextStyle(color: Colors.white, fontSize: 30),
                       ),
                       FlatButton(
