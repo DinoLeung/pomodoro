@@ -28,12 +28,42 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static final Duration _tick = Duration(milliseconds: 10);
+  static final Duration _defaultDuration = Duration(minutes: 25);
   static final TextStyle _timeTextStyle =
       TextStyle(color: Colors.white, fontSize: 30);
+  static final SnackBar _breakMessage = SnackBar(
+      content: Text('It\'s time to take a break!',
+          style: TextStyle(fontFamily: 'IBM Plex Sans')));
   Timer _timer;
-  Duration _defaultTime = Duration(minutes: 25);
-  Duration _countdown = Duration(minutes: 25);
+  Duration _duration = _defaultDuration;
+  Duration _countdown = _defaultDuration;
+  DateTime _endTime;
   String _buttonText = 'Start';
+
+  void startTimer(BuildContext context) {
+    _endTime = DateTime.now().add(_duration);
+    _timer = Timer.periodic(
+        _tick,
+        (Timer timer) => setState(() {
+              _countdown = _endTime.difference(DateTime.now());
+              if (DateTime.now().isAfter(_endTime)) {
+                stopTimer();
+                alarmRing();
+                Scaffold.of(context).showSnackBar(_breakMessage);
+              }
+            }));
+    _buttonText = 'Stop';
+  }
+
+  void stopTimer() => setState(() {
+        _buttonText = 'Reset';
+        _timer.cancel();
+      });
+
+  void resetTimer() => setState(() {
+        _countdown = _duration;
+        _buttonText = 'Start';
+      });
 
   void alarmRing() {
     AudioContext audioContext = new AudioContext();
@@ -48,36 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
             }));
   }
 
-  void startTimer() {
-    _timer = Timer.periodic(
-        _tick,
-        (Timer timer) => setState(() {
-              if (_countdown <= Duration.zero) {
-                stopTimer();
-                alarmRing();
-              } else {
-                _countdown -= _tick;
-              }
-            }));
-    _buttonText = 'Stop';
-  }
-
-  void stopTimer() => setState(() {
-        _buttonText = 'Reset';
-        _timer.cancel();
-      });
-
-  void resetTimer() => setState(() {
-        _countdown = _defaultTime;
-        _buttonText = 'Start';
-      });
-
-  void buttonPress() {
+  void buttonPress(BuildContext context) {
     if (_timer?.isActive ?? false) {
       stopTimer();
     } else {
-      if (_countdown == _defaultTime) {
-        startTimer();
+      if (_countdown == _duration) {
+        startTimer(context);
       } else {
         resetTimer();
       }
@@ -100,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 300,
                     width: 300,
                     child: CircularProgressIndicator(
-                      value: _countdown.inMilliseconds /
-                          _defaultTime.inMilliseconds,
+                      value:
+                          _countdown.inMilliseconds / _duration.inMilliseconds,
                       backgroundColor: Colors.white,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.lime),
                     ),
@@ -133,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         textColor: Colors.white,
                         child: Text(_buttonText),
                         shape: StadiumBorder(),
-                        onPressed: () => buttonPress(),
+                        onPressed: () => buttonPress(context),
                       ),
                     ],
                   ),
