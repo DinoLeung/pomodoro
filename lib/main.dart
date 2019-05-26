@@ -98,55 +98,61 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Builder(
-        builder: (context) => Center(
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 300,
-                    width: 300,
-                    child: CircularProgressIndicator(
-                      value:
-                          _countdown.inMilliseconds / _duration.inMilliseconds,
-                      backgroundColor: Colors.white,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.lime),
+          builder: (context) => Padding(
+                padding: EdgeInsets.all(10),
+                child: Center(
+                  child: FittedBox(
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: CircularProgressIndicator(
+                            value: _countdown.inMilliseconds /
+                                _duration.inMilliseconds,
+                            backgroundColor: Colors.white,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.lime),
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  '${_countdown.inMinutes}',
+                                  style: _timeTextStyle,
+                                ),
+                                Text(
+                                  ':',
+                                  style: _timeTextStyle,
+                                ),
+                                Text(
+                                  (_countdown.inSeconds -
+                                          (_countdown.inMinutes * 60))
+                                      .toString()
+                                      .padLeft(2, '0'),
+                                  style: _timeTextStyle,
+                                )
+                              ],
+                            ),
+                            FlatButton(
+                              color: Colors.green,
+                              textColor: Colors.white,
+                              child: Text(_buttonText),
+                              shape: StadiumBorder(),
+                              onPressed: () => buttonPress(context),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '${_countdown.inMinutes}',
-                            style: _timeTextStyle,
-                          ),
-                          Text(
-                            ':',
-                            style: _timeTextStyle,
-                          ),
-                          Text(
-                            (_countdown.inSeconds - (_countdown.inMinutes * 60))
-                                .toString()
-                                .padLeft(2, '0'),
-                            style: _timeTextStyle,
-                          )
-                        ],
-                      ),
-                      FlatButton(
-                        color: Colors.green,
-                        textColor: Colors.white,
-                        child: Text(_buttonText),
-                        shape: StadiumBorder(),
-                        onPressed: () => buttonPress(context),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-      ),
+                ),
+              )),
     );
   }
 }
