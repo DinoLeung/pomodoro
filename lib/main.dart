@@ -11,7 +11,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pomodoro Timer',
-      theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'IBM Plex Sans'),
+      theme: ThemeData(
+          primarySwatch: Colors.lightGreen, fontFamily: 'IBM Plex Sans'),
       home: MyHomePage(title: 'Tomato'),
     );
   }
@@ -94,9 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.redAccent[100],
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar:
+          AppBar(title: Image.asset('image/tomato.png', width: 40, height: 40)),
       body: Builder(
           builder: (context) => Padding(
                 padding: EdgeInsets.all(10),
