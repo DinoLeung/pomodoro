@@ -3,7 +3,6 @@ import 'dart:web_audio';
 import 'dart:html' as html;
 
 import 'package:flutter_web/material.dart';
-import 'package:pomodoro/utils.dart';
 
 class TimerWidget extends StatefulWidget {
   TimerWidget({Key key, this.duration, this.tick, this.onTick})
@@ -18,12 +17,13 @@ class TimerWidget extends StatefulWidget {
 class _TimerWidgetState extends State<TimerWidget> {
   static final Duration _defaultTick = Duration(milliseconds: 500);
   static final Duration _defaultDuration = Duration(minutes: 25);
-  static final Function _defaultOnTick = (Duration d) => {};
+  static final Function _defaultOnTick = (String d) => {};
   static final TextStyle _timeTextStyle =
       TextStyle(color: Colors.white, fontSize: 30);
   static final SnackBar _breakMessage = SnackBar(
       content: Text('It\'s time to take a break!',
           style: TextStyle(fontFamily: 'IBM Plex Sans')));
+
   Timer _timer;
   Duration _duration;
   Duration _tick;
@@ -31,6 +31,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Duration _countdown;
   DateTime _endTime;
   String _buttonText;
+  String _displayTime;
 
   @override
   void initState() {
@@ -43,13 +44,20 @@ class _TimerWidgetState extends State<TimerWidget> {
     super.initState();
   }
 
+  String getDisplayTime(Duration time) {
+    int minutes = time.inMinutes;
+    int seconds = (time.inSeconds - (time.inMinutes * 60));
+    return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+  }
+
   void startTimer(BuildContext context) {
     _endTime = DateTime.now().add(_duration);
     _timer = Timer.periodic(
         _tick,
         (Timer timer) => setState(() {
               _countdown = _endTime.difference(DateTime.now());
-              _onTick(_countdown);
+              _displayTime = getDisplayTime(_countdown);
+              _onTick(_displayTime);
               if (DateTime.now().isAfter(_endTime)) {
                 stopTimer();
                 alarmRing();
@@ -66,6 +74,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   void resetTimer() => setState(() {
         _countdown = _duration;
+        _displayTime = getDisplayTime(_countdown);
         _buttonText = 'Start';
       });
 
@@ -89,8 +98,8 @@ class _TimerWidgetState extends State<TimerWidget> {
       if (_countdown == _duration) {
         startTimer(context);
       } else {
-        _onTick(_duration);
         resetTimer();
+        _onTick(_displayTime);
       }
     }
   }
@@ -116,7 +125,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  getDisplayTime(_countdown),
+                  _displayTime,
                   style: _timeTextStyle,
                 ),
               ],

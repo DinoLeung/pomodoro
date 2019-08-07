@@ -1,6 +1,5 @@
 import 'package:flutter_web/material.dart';
 import 'package:pomodoro/TimerWidget.dart';
-import 'package:pomodoro/utils.dart';
 
 void main() => runApp(BaseApp());
 
@@ -30,8 +29,8 @@ class _BaseAppState extends State<BaseApp> {
                       child: TimerWidget(
                           duration: Duration(minutes: 25),
                           tick: Duration(seconds: 1),
-                          onTick: (Duration countdown) => this.setState(() {
-                                _title = getDisplayTime(countdown);
+                          onTick: (String countdown) => this.setState(() {
+                                _title = countdown;
                               })),
                     ),
                   ),
