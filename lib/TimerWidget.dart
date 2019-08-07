@@ -15,9 +15,6 @@ class TimerWidget extends StatefulWidget {
 }
 
 class _TimerWidgetState extends State<TimerWidget> {
-  static final Duration _defaultTick = Duration(milliseconds: 500);
-  static final Duration _defaultDuration = Duration(minutes: 25);
-  static final Function _defaultOnTick = (String d) => {};
   static final TextStyle _timeTextStyle =
       TextStyle(color: Colors.white, fontSize: 30);
   static final SnackBar _breakMessage = SnackBar(
@@ -36,9 +33,9 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   void initState() {
     setState(() {
-      _duration = widget.duration ?? _defaultDuration;
-      _tick = widget.tick ?? _defaultTick;
-      _onTick = widget.onTick ?? _defaultOnTick;
+      _duration = widget.duration ?? Duration(minutes: 25);
+      _tick = widget.tick ?? Duration(milliseconds: 100);
+      _onTick = widget.onTick ?? (String displayTime) => {};
       resetTimer();
     });
     super.initState();
@@ -51,20 +48,23 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void startTimer(BuildContext context) {
-    _endTime = DateTime.now().add(_duration);
-    _timer = Timer.periodic(
-        _tick,
-        (Timer timer) => setState(() {
-              _countdown = _endTime.difference(DateTime.now());
-              _displayTime = getDisplayTime(_countdown);
-              _onTick(_displayTime);
-              if (DateTime.now().isAfter(_endTime)) {
-                stopTimer();
-                alarmRing();
-                Scaffold.of(context).showSnackBar(_breakMessage);
-              }
-            }));
-    _buttonText = 'Stop';
+    setState(() {
+      _endTime = DateTime.now().add(_duration);
+      _buttonText = 'Stop';
+      _timer = Timer.periodic(_tick, (Timer timer) {
+        print(DateTime.now());
+        setState(() {
+          _countdown = _endTime.difference(DateTime.now());
+          _displayTime = getDisplayTime(_countdown);
+          _onTick(_displayTime);
+          if (DateTime.now().isAfter(_endTime)) {
+            stopTimer();
+            alarmRing();
+            Scaffold.of(context).showSnackBar(_breakMessage);
+          }
+        });
+      });
+    });
   }
 
   void stopTimer() => setState(() {
