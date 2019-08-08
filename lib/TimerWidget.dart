@@ -50,6 +50,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   void startTimer(BuildContext context) {
     setState(() {
       _endTime = DateTime.now().add(_duration);
+      _displayTime = getDisplayTime(_duration - _tick);
+      _onTick(_displayTime);
       _buttonText = 'Stop';
       _timer = Timer.periodic(_tick, (Timer timer) {
         print(DateTime.now());
