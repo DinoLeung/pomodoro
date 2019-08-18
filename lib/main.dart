@@ -22,19 +22,20 @@ class _BaseAppState extends State<BaseApp> {
         appBar: AppBar(
             title: Image.asset('image/tomato.png', width: 40, height: 40)),
         body: Builder(
-            builder: (context) => Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Center(
-                    child: FittedBox(
-                      child: TimerWidget(
-                          duration: Duration(minutes: 25),
-                          tick: Duration(seconds: 1),
-                          onTick: (String countdown) => this.setState(() {
-                                _title = countdown;
-                              })),
-                    ),
-                  ),
-                )),
+          builder: (context) => Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(10),
+            child: FittedBox(
+              child: TimerWidget(
+                duration: Duration(minutes: 25),
+                tick: Duration(seconds: 1),
+                onTick: (String countdown) => this.setState(() {
+                  _title = countdown;
+                }),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
