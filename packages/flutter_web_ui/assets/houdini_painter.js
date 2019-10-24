@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -228,11 +228,11 @@ class FlutterPainter {
     // rounded rectangle (after the corner).
     // TODO(het): Confirm that this is the end point in Flutter for RRect
 
-    ctx.moveTo(rrect.left + rrect.trRadiusX, rrect.top);
-
     if (startNewPath) {
       ctx.beginPath();
     }
+
+    ctx.moveTo(rrect.left + rrect.trRadiusX, rrect.top);
 
     // Top side and top-right corner
     ctx.lineTo(rrect.right - rrect.trRadiusX, rrect.top);
