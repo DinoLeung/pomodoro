@@ -116,7 +116,6 @@ class _TimerWidgetState extends State<TimerWidget> {
           width: 300,
           child: CircularProgressIndicator(
             value: _countdown.inMilliseconds / _duration.inMilliseconds,
-            backgroundColor: Colors.white,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.lime),
           ),
         ),
