@@ -16,9 +16,8 @@ class TimerWidget extends StatefulWidget {
 class _TimerWidgetState extends State<TimerWidget> {
   static final TextStyle _timeTextStyle =
       TextStyle(color: Colors.white, fontSize: 30);
-  static final SnackBar _breakMessage = SnackBar(
-      content: Text('It\'s time to take a break!',
-          style: TextStyle(fontFamily: 'IBM Plex Sans')));
+  static final SnackBar _breakMessage =
+      SnackBar(content: Text('It\'s time to take a break!'));
 
   Timer _timer;
   Duration _duration;

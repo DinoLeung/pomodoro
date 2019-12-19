@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pomodoro/TimerWidget.dart';
 
 void main() => runApp(BaseApp());
@@ -16,7 +17,8 @@ class _BaseAppState extends State<BaseApp> {
     return MaterialApp(
       title: _title,
       theme: ThemeData(
-          primarySwatch: Colors.lightGreen, fontFamily: 'IBM Plex Sans'),
+          primarySwatch: Colors.lightGreen,
+          textTheme: GoogleFonts.iBMPlexSansTextTheme()),
       home: Scaffold(
         backgroundColor: Colors.redAccent[100],
         appBar: AppBar(
