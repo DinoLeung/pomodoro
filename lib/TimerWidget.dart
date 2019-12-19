@@ -31,13 +31,13 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   void initState() {
-    _playerController = VideoPlayerController.asset('assets/audio/ring.ogg')
-      ..setLooping(false)
-      ..initialize();
     setState(() {
       _duration = widget.duration ?? Duration(minutes: 25);
       _tick = widget.tick ?? Duration(milliseconds: 100);
       _onTick = widget.onTick ?? (String displayTime) => {};
+      _playerController = VideoPlayerController.asset('assets/audio/ring.ogg')
+        ..setLooping(false)
+        ..initialize();
       resetTimer();
     });
     super.initState();
@@ -80,10 +80,10 @@ class _TimerWidgetState extends State<TimerWidget> {
         _countdown = _duration;
         _displayTime = getDisplayTime(_countdown);
         _buttonText = 'Start';
-        _playerController.seekTo(Duration(seconds: 0));
       });
 
   void alarmRing() {
+    _playerController.seekTo(Duration(seconds: 0));
     _playerController.play();
   }
 
