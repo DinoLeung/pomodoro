@@ -1,4 +1,4 @@
-import 'package:flutter_web/material.dart';
+import 'package:flutter/material.dart';
 import 'package:pomodoro/TimerWidget.dart';
 
 void main() => runApp(BaseApp());
@@ -20,7 +20,8 @@ class _BaseAppState extends State<BaseApp> {
       home: Scaffold(
         backgroundColor: Colors.redAccent[100],
         appBar: AppBar(
-            title: Image.asset('image/tomato.png', width: 40, height: 40)),
+            title:
+                Image.asset('assets/image/tomato.png', width: 40, height: 40)),
         body: Builder(
           builder: (context) => Container(
             alignment: Alignment.center,

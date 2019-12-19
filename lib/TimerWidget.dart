@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:web_audio';
-import 'dart:html' as html;
 
-import 'package:flutter_web/material.dart';
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class TimerWidget extends StatefulWidget {
   TimerWidget({Key key, this.duration, this.tick, this.onTick})
@@ -29,6 +28,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   DateTime _endTime;
   String _buttonText;
   String _displayTime;
+  VideoPlayerController _playerController;
 
   @override
   void initState() {
@@ -38,13 +38,16 @@ class _TimerWidgetState extends State<TimerWidget> {
       _onTick = widget.onTick ?? (String displayTime) => {};
       resetTimer();
     });
+    _playerController = VideoPlayerController.asset('assets/audio/ring.ogg');
+    _playerController.setLooping(false);
+    _playerController.initialize();
     super.initState();
   }
 
   String getDisplayTime(Duration time) {
     int minutes = time.inMinutes;
     int seconds = (time.inSeconds - (time.inMinutes * 60));
-    return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
   void startTimer(BuildContext context) {
@@ -81,16 +84,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       });
 
   void alarmRing() {
-    AudioContext audioContext = new AudioContext();
-    html.HttpRequest.request('./assets/ring.ogg', responseType: 'arraybuffer')
-        .then((html.HttpRequest request) => audioContext
-                .decodeAudioData(request.response)
-                .then((AudioBuffer buffer) {
-              AudioBufferSourceNode source = audioContext.createBufferSource();
-              source.buffer = buffer;
-              source.connectNode(audioContext.destination);
-              source.start(audioContext.currentTime);
-            }));
+    _playerController.play();
   }
 
   void buttonPress(BuildContext context) {
