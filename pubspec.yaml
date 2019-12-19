@@ -83,5 +83,5 @@ flutter:
 flutter_icons:
   image_path: 'assets/image/tomato.png'
   android: true
-  adaptive_icon_background: '#8bc34a'
-  adaptive_icon_foreground: 'assets/image/tomato.png'
+  adaptive_icon_background: '#8BC34A'
+  adaptive_icon_foreground: 'assets/image/tomato_foreground.png'
