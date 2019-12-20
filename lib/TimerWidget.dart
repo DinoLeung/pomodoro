@@ -56,7 +56,6 @@ class _TimerWidgetState extends State<TimerWidget> {
       _onTick(_displayTime);
       _buttonText = 'Stop';
       _timer = Timer.periodic(_tick, (Timer timer) {
-        print(DateTime.now());
         setState(() {
           _countdown = _endTime.difference(DateTime.now());
           _displayTime = getDisplayTime(_countdown);
@@ -82,10 +81,9 @@ class _TimerWidgetState extends State<TimerWidget> {
         _buttonText = 'Start';
       });
 
-  void alarmRing() {
-    _playerController.seekTo(Duration(seconds: 0));
-    _playerController.play();
-  }
+  void alarmRing() => _playerController
+      .seekTo(Duration.zero)
+      .then((_) => _playerController.play());
 
   void buttonPress(BuildContext context) {
     if (_timer?.isActive ?? false) {

@@ -31,7 +31,7 @@ class _BaseAppState extends State<BaseApp> {
             child: FittedBox(
               child: TimerWidget(
                 duration: Duration(minutes: 25),
-                tick: Duration(seconds: 1),
+                tick: Duration(milliseconds: 250),
                 onTick: (String countdown) => this.setState(() {
                   _title = countdown;
                 }),
