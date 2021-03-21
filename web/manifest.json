@@ -1,0 +1,22 @@
+{
+    "name": "pomodoro",
+    "short_name": "pomodoro",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FFCDD2",
+    "theme_color": "#8BC34A",
+    "description": "A pomodoro timer.",
+    "orientation": "portrait",
+    "prefer_related_applications": false,
+    "icons": [{
+            "src": "assets/assets/image/tomato_small.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/assets/image/tomato.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

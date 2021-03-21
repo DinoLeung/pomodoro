@@ -36,16 +36,15 @@ class _TimerWidgetState extends State<TimerWidget> {
       _tick = widget.tick ?? Duration(milliseconds: 100);
       _onTick = widget.onTick ?? (String displayTime) => {};
       _playerController = VideoPlayerController.asset('assets/audio/ring.ogg')
-        ..setLooping(false)
-        ..initialize();
+        ..setLooping(false);
       resetTimer();
     });
     super.initState();
   }
 
   String getDisplayTime(Duration time) {
-    int minutes = time.inMinutes;
-    int seconds = (time.inSeconds - (time.inMinutes * 60));
+    var minutes = time.inMinutes;
+    var seconds = (time.inSeconds - (time.inMinutes * 60));
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
@@ -63,7 +62,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           if (DateTime.now().isAfter(_endTime)) {
             stopTimer();
             alarmRing();
-            Scaffold.of(context).showSnackBar(_breakMessage);
+            ScaffoldMessenger.of(context).showSnackBar(_breakMessage);
           }
         });
       });
@@ -81,9 +80,8 @@ class _TimerWidgetState extends State<TimerWidget> {
         _buttonText = 'Start';
       });
 
-  void alarmRing() => _playerController
-      .seekTo(Duration.zero)
-      .then((_) => _playerController.play());
+  void alarmRing() =>
+      _playerController.initialize().then((_) => _playerController.play());
 
   void buttonPress(BuildContext context) {
     if (_timer?.isActive ?? false) {
@@ -123,12 +121,16 @@ class _TimerWidgetState extends State<TimerWidget> {
                 ),
               ],
             ),
-            FlatButton(
-              color: Colors.green,
-              textColor: Colors.white,
-              child: Text(_buttonText),
-              shape: StadiumBorder(),
+            TextButton(
+              autofocus: true,
               onPressed: () => buttonPress(context),
+              style: TextButton.styleFrom(
+                shape: StadiumBorder(),
+                backgroundColor: Colors.green,
+                primary: Colors.white,
+                elevation: 2,
+              ),
+              child: Text(_buttonText),
             ),
           ],
         ),

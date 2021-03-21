@@ -18,7 +18,7 @@ class _BaseAppState extends State<BaseApp> {
       title: _title,
       theme: ThemeData(
           primarySwatch: Colors.lightGreen,
-          textTheme: GoogleFonts.iBMPlexSansTextTheme()),
+          textTheme: GoogleFonts.ibmPlexSansTextTheme()),
       home: Scaffold(
         backgroundColor: Colors.redAccent[100],
         appBar: AppBar(
@@ -32,9 +32,8 @@ class _BaseAppState extends State<BaseApp> {
               child: TimerWidget(
                 duration: Duration(minutes: 25),
                 tick: Duration(milliseconds: 250),
-                onTick: (String countdown) => this.setState(() {
-                  _title = countdown;
-                }),
+                onTick: (String countdown) =>
+                    setState(() => _title = countdown),
               ),
             ),
           ),
